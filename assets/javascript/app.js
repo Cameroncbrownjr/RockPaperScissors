@@ -38,6 +38,7 @@ $(document).ready(function () {
                 player = 2;
                 game()
             }
+
             else {
                 display.html('<p> Sorry ,Game Is Full </strong> </p>')
             }
@@ -62,31 +63,44 @@ $(document).ready(function () {
 
     })
 
-    $(document).on('click', '#playagain', function () {
-        my_database.ref('game').remove()
-        location.reload()
-    })
 
     function winner() {
         my_database.ref('game').on("value", function (snapshot) {
             var sv = snapshot.val();
-            if (sv.player1 === "null" || sv.player2 === "null") {
-                display.html('<p>waiting for player move</p>')
-            }
-            else {
-                console.log(sv.player1.chossen + " || " + sv.player2.chossen)
-                if (sv.player1.chossen === "rock" && sv.player2.chossen === "scissors" ||
-                    sv.player1.chossen === "scissors" && sv.player2.chossen === "paper" ||
-                    sv.player1.chossen === "paper" && sv.player2.chossen === "rock") {
+            display.html('<p>waiting for player')
+            if (sv.player1 !== "null" && sv.player2 !== "null") {
 
-                    display.html("<h1>Player 1 Wins!!</p>")
-                    display.append("<button id='playagain'>PLAY AGAIN")
+                if (sv.player1.chossen === sv.player1.chossen) {
+                    display.html('<h1>IS A TIE')
+                }
+                if (sv.player1.chossen === "rock" && sv.player2.chossen === "scissors" || sv.player1.chossen === "scissors" && sv.player2.chossen === "paper" || sv.player1.chossen === "paper" && sv.player2.chossen === "rock") {
+                    display.html('<h1>PLAYER 1 WON')
                 }
                 else {
-                    display.append("<button id='playagain'>PLAY AGAIN")
+                    display.html('<h1>PLAYER 2 WON')
                 }
+                display.append("<button id='playagain'>Play Again")
+                my_database.ref('game').update({ done: true })
+                my_database.ref('game').off()
             }
         })
     }
+
+    $(document).on('click', '#playagain', function () {
+        my_database.ref().once("value", function (snapshot) {
+            var sv = snapshot.val(); 
+            if (Object.keys(sv.game).length === 3) {
+                display.html('<p> You Are <strong>Player 1 </strong> </p>')
+                $("#player").text('Player 1 ')
+                my_database.ref('game').set({ player1: 'null' })
+                player = 1;
+                game()
+            }
+            else {
+                location.reload()
+            }
+        })
+    })
+
 
 });
