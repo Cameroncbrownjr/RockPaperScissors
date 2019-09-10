@@ -9,3 +9,7 @@ this small application allows you to almost by magic comunicate over two compute
 2. jquery
 3. bootstap
 4. reset.csss
+
+## Live Demo
+
+https://cameroncbrownjr.github.io/RockPaperScissors/
